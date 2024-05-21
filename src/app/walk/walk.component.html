@@ -1,2 +1,293 @@
-<title>Enter Training Walk</title>
-<p>walk works!</p>
+<form class="needsValidation" [formGroup]="walkForm">
+  <alert></alert>
+  
+  <div *ngIf="walkType.name=='training'">
+    <p class="title">Enter Training Walk</p>
+
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="date">Date:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="date" id="date" name="date" formControlName="date"><br>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3"></div>
+      <div class="col-md-4 mb-3">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="this.importWalk()">Import Walk</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="shoe">Shoe:</label><br>
+        <select class="custom-select d-block w-100" id="shoe" formControlName="shoe">
+          <option *ngFor="let shoe of shoes" [ngValue]="shoe">{{shoe.name}}</option>
+        </select>
+        <div class="invalid-feedback">
+          Please select a valid shoe.
+        </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="windSpeed">Wind Speed:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="windSpeed" name="windSpeed" formControlName="windSpeed"><br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="distance">Distance:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="distance" name="distance" formControlName="distance"><br>
+        </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="windDirection">Wind Direction: </label><br>
+        <select class="custom-select d-block w-100" id="windDirection" formControlName="windDirection">
+          <option *ngFor="let windDirection of windDirections" [ngValue]="windDirection">{{windDirection.Direction}}
+          </option>
+        </select>
+        <div class="invalid-feedback">
+          Please select a valid wind direction.
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="startTime">Start Time:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="startTime" name="startTime" formControlName="startTime"><br>
+        </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="temperature">Temperature:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="temperature" name="temperature" formControlName="temperature"><br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="endTime">End Time:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="endTime" name="endTime" formControlName="endTime"><br>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="entry" for="precipitation">Precipitation:</label><br>
+        <div class="input-group">
+          <input class="form-control,entry" type="radio" id="no" name="precipitation" value="No"
+            formControlName="precipitation">&nbsp;
+          <label class="entry" for="no">No</label><br>
+        </div>
+        <div class="input-group">
+          <input class="form-control,entry" type="radio" id="yes" name="precipitation" value="Yes"
+            formControlName="precipitation">&nbsp;
+          <label class="entry" for="yes">Yes</label><br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="averageHr">Average HR:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="averageHr" name="averageHr" formControlName="averageHr"><br>
+        </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="route">Route:</label><br>
+        <select class="custom-select d-block w-100" id="route" formControlName="route">
+          <option *ngFor="let route of routes" [ngValue]="route">{{route.name}}</option>
+        </select>
+        <div class="invalid-feedback">
+          Please select a valid route.
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="maxHr">Max HR:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="maxHr" name="maxHr" formControlName="maxHr"><br>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="entry" for="numberAttempts">Number Of Attempts:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="numberAttempts" name="numberAttempts"
+            formControlName="numberAttempts"><br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="elevationGain">Elevation Gain:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="elevationGain" name="elevationGain"
+            formControlName="elevationGain"><br>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="entry" for="numberSuccesses">Number Of Successes:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="numberSuccesses" name="numberSuccesses"
+            formControlName="numberSuccesses"><br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="maxSpeed">Max Speed:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="maxSpeed" name="maxSpeed" formControlName="maxSpeed"><br>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="entry" for="notes">Notes:</label><br>
+      <div class="input-group">
+        <input class="form-control" type="text" id="notes" name="notes" formControlName="notes"><br>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="walkType.name=='recreational'">
+    <p class="title">Enter Recreational Walk</p>
+
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="date">Date:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="date" id="date" name="date" formControlName="date"><br>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3"></div>
+      <div class="col-md-4 mb-3">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="this.importWalk()">Import Walk</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="shoe">Shoe:</label><br>
+        <select class="custom-select d-block w-100" id="shoe" formControlName="shoe">
+          <option *ngFor="let shoe of shoes" [ngValue]="shoe">{{shoe.name}}</option>
+        </select>
+        <div class="invalid-feedback">
+          Please select a valid shoe.
+        </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="elevationGain">Elevation Gain:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="elevationGain" name="elevationGain"
+            formControlName="elevationGain"><br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="distance">Distance:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="distance" name="distance" formControlName="distance"><br>
+        </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="maxSpeed">Max Speed:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="maxSpeed" name="maxSpeed" formControlName="maxSpeed"><br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="startTime">Start Time:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="startTime" name="startTime" formControlName="startTime"><br>
+        </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="wind">Wind:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="wind" name="wind" formControlName="wind"><br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="endTime">End Time:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="endTime" name="endTime" formControlName="endTime"><br>
+        </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="temperature">Temperature:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="temperature" name="temperature" formControlName="temperature"><br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="pathEndTime">Path End Time:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="pathEndTime" name="pathEndTime" formControlName="pathEndTime"><br>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="entry" for="precipitation">Precipitation:</label><br>
+        <div class="input-group">
+          <input class="form-control,entry" type="radio" id="no" name="precipitation" value="No"
+            formControlName="precipitation">&nbsp;
+          <label class="entry" for="no">No</label><br>
+        </div>
+        <div class="input-group">
+          <input class="form-control,entry" type="radio" id="yes" name="precipitation" value="Yes"
+            formControlName="precipitation">&nbsp;
+          <label class="entry" for="yes">Yes</label><br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="averageHr">Average HR:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="averageHr" name="averageHr" formControlName="averageHr"><br>
+        </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="route">Route:</label><br>
+        <select class="custom-select d-block w-100" id="route" formControlName="route">
+          <option *ngFor="let route of routes" [ngValue]="route">{{route.name}}</option>
+        </select>
+        <div class="invalid-feedback">
+          Please select a valid route.
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 mb-3">
+        <label class="entry" for="maxHr">Max HR:</label><br>
+        <div class="input-group">
+          <input class="form-control" type="text" id="maxHr" name="maxHr" formControlName="maxHr"><br>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="entry" for="notes">Notes:</label><br>
+      <div class="input-group">
+        <input class="form-control" type="text" id="notes" name="notes" formControlName="notes"><br>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="this.addWalk()">Submit</button>
+
+  <footer class="my-5 pt-5 text-muted text-center text-small">
+    <p class="mb-1">&copy; 2006-2024 YellowCaddis Development</p>
+    <ul class="list-inline">
+      <li class="list-inline-item"><a href="#">Privacy</a></li>
+      <li class="list-inline-item"><a href="#">Terms</a></li>
+      <li class="list-inline-item"><a href="#">Support</a></li>
+    </ul>
+  </footer>
+
+</form>

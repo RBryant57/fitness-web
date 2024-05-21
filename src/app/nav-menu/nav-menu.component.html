@@ -1,9 +1,9 @@
 <header>
     <nav
-      class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"
+      class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-4"
     >
       <div class="container">
-        <a class="navbar-brand" [routerLink]="['/']">CommuteTrackerWeb</a>
+        <a class="navbar-brand" [routerLink]="['/']">Fitness Web</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -26,10 +26,22 @@
               <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
             </li>
             <li class="nav-item" [routerLinkActive]="['link-active']">
-              <a class="nav-link text-dark" [routerLink]="['/commute']">Commutes</a>
+              <a class="nav-link text-dark" [routerLink]="['/tride']">Training Rides</a>
             </li>
             <li class="nav-item" [routerLinkActive]="['link-active']">
-              <a class="nav-link text-dark" [routerLink]="['/delayreason']">Delay Reasons</a>
+              <a class="nav-link text-dark" [routerLink]="['/rride']">Recreational Rides</a>
+            </li>
+            <li class="nav-item" [routerLinkActive]="['link-active']">
+              <a class="nav-link text-dark" [routerLink]="['/trun']">Training Runs</a>
+            </li>
+            <li class="nav-item" [routerLinkActive]="['link-active']">
+              <a class="nav-link text-dark" [routerLink]="['/rrun']">Recreational Runs</a>
+            </li>
+            <li class="nav-item" [routerLinkActive]="['link-active']">
+              <a class="nav-link text-dark" [routerLink]="['/twalk']">Training Walks</a>
+            </li>
+            <li class="nav-item" [routerLinkActive]="['link-active']">
+              <a class="nav-link text-dark" [routerLink]="['/rwalk']">Recreational Walks</a>
             </li>
             <li class="nav-item" [routerLinkActive]="['link-active']">
               <a class="nav-link text-dark" [routerLink]="['/destination']">Destinations</a>
