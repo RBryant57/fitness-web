@@ -1,0 +1,145 @@
+<div class="page">
+  <p class="page-eyebrow">Training Log</p>
+  <div class="page-header">
+    <h1>Log a Training Ride</h1>
+    <div class="page-actions">
+      <a class="btn" routerLink="/rides/training">Cancel</a>
+    </div>
+  </div>
+  <p class="page-subtitle">Record a structured ride against a known route.</p>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-grid">
+      <div class="field">
+        <label for="exerciseDate">Date</label>
+        <input id="exerciseDate" type="date" formControlName="ExerciseDate" />
+      </div>
+      <div class="field">
+        <label for="equipmentId">Bike</label>
+        <select id="equipmentId" formControlName="EquipmentId">
+          <option [ngValue]="null">Select a bike…</option>
+          @for (bike of bikes; track bike.Id) {
+            <option [ngValue]="bike.Id">{{ bike.Name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="startTime">Start time</label>
+        <input id="startTime" type="datetime-local" formControlName="StartTime" />
+      </div>
+      <div class="field">
+        <label for="endTime">End time</label>
+        <input id="endTime" type="datetime-local" formControlName="EndTime" />
+      </div>
+
+      <div class="field">
+        <label for="routeId">Route</label>
+        <select id="routeId" formControlName="RouteId">
+          <option [ngValue]="null">Select a route…</option>
+          @for (route of routes; track route.Id) {
+            <option [ngValue]="route.Id">{{ route.Name }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label for="quantity">Distance (mi)</label>
+        <input id="quantity" type="number" step="0.01" formControlName="Quantity" />
+      </div>
+
+      <div class="form-section-title">Odometer &amp; time</div>
+      <div class="field">
+        <label for="startOdometer">Start odometer</label>
+        <input id="startOdometer" type="number" formControlName="StartOdometer" />
+      </div>
+      <div class="field">
+        <label for="endOdometer">End odometer</label>
+        <input id="endOdometer" type="number" formControlName="EndOdometer" />
+      </div>
+      <div class="field">
+        <label>Ride time</label>
+        <div style="display:flex; gap:8px;">
+          <input type="number" min="0" formControlName="RideTimeHours" placeholder="H" />
+          <input type="number" min="0" max="59" formControlName="RideTimeMinutes" placeholder="M" />
+          <input type="number" min="0" max="59" formControlName="RideTimeSeconds" placeholder="S" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="maxSpeed">Max speed (mph)</label>
+        <input id="maxSpeed" type="number" step="0.1" formControlName="MaxSpeed" />
+      </div>
+
+      <div class="form-section-title">Effort</div>
+      <div class="field">
+        <label for="averageHr">Average HR</label>
+        <input id="averageHr" type="number" formControlName="AverageHr" />
+      </div>
+      <div class="field">
+        <label for="maxHr">Max HR</label>
+        <input id="maxHr" type="number" formControlName="MaxHr" />
+      </div>
+      <div class="field">
+        <label for="averageCadence">Average cadence</label>
+        <input id="averageCadence" type="number" formControlName="AverageCadence" />
+      </div>
+      <div class="field">
+        <label for="elevationGain">Elevation gain (ft)</label>
+        <input id="elevationGain" type="number" formControlName="ElevationGain" />
+      </div>
+
+      <div class="form-section-title">Conditions</div>
+      <div class="field">
+        <label for="temperature">Temperature (°F)</label>
+        <input id="temperature" type="number" formControlName="Temperature" />
+      </div>
+      <div class="field">
+        <label for="windSpeed">Wind speed (mph)</label>
+        <input id="windSpeed" type="number" formControlName="WindSpeed" />
+      </div>
+      <div class="field">
+        <label for="windDirection">Wind direction</label>
+        <select id="windDirection" formControlName="WindDirection">
+          <option value="">—</option>
+          @for (dir of windDirections; track dir) {
+            <option [value]="dir">{{ dir }}</option>
+          }
+        </select>
+      </div>
+      <div class="field checkbox-field">
+        <input id="precipitation" type="checkbox" formControlName="Precipitation" />
+        <label for="precipitation">Rain during ride</label>
+      </div>
+
+      <div class="form-section-title">Route crossings</div>
+      <div class="field">
+        <label for="numberOfAttempts">Crossing attempts</label>
+        <input id="numberOfAttempts" type="number" formControlName="NumberOfAttempts" />
+      </div>
+      <div class="field">
+        <label for="numberOfSuccesses">Crossing successes</label>
+        <input id="numberOfSuccesses" type="number" formControlName="NumberOfSuccesses" />
+      </div>
+
+      <div class="form-section-title">Notes &amp; track</div>
+      <div class="field field-full">
+        <label for="notes">Notes</label>
+        <textarea id="notes" formControlName="Notes"></textarea>
+      </div>
+      <div class="field field-full">
+        <app-gpx-upload (gpxLoaded)="onGpxLoaded($event)"></app-gpx-upload>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="submitting">
+        {{ submitting ? 'Saving…' : 'Save ride' }}
+      </button>
+      <a class="btn" routerLink="/rides/training">Cancel</a>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,70 @@
+<div class="page">
+  <p class="page-eyebrow">Equipment</p>
+  <div class="page-header">
+    <h1>Shoes</h1>
+    <div class="page-actions">
+      <a class="btn btn-primary" routerLink="/shoes/new">+ Add Shoe</a>
+    </div>
+  </div>
+  <p class="page-subtitle">Rotation used across training runs, walks and treadmill sessions.</p>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <div class="table-wrap">
+    @if (loading) {
+      <div class="loading-row"><span class="spinner"></span> Loading shoes…</div>
+    } @else if (shoes.length === 0) {
+      <div class="empty-state">
+        <div class="empty-title">No shoes yet</div>
+        <p>Add your first pair to start logging runs and walks.</p>
+        <a class="btn btn-primary" routerLink="/shoes/new">+ Add Shoe</a>
+      </div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Acquired</th>
+            <th>Retired</th>
+            <th class="num">Age (days)</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (shoe of shoes; track shoe.Id) {
+            <tr>
+              <td>{{ shoe.Name }}</td>
+              <td>{{ shoe.AcquisitionDate | date: 'MMM d, y' }}</td>
+              <td>
+                @if (shoe.RetireDate) {
+                  <span class="badge badge-warn">{{ shoe.RetireDate | date: 'MMM d, y' }}</span>
+                } @else {
+                  <span class="badge badge-accent">Active</span>
+                }
+              </td>
+              <td class="num">{{ shoe.Age }}</td>
+              <td class="wrap">{{ shoe.Notes || '—' }}</td>
+              <td style="display:flex; gap:8px;">
+                <a class="btn btn-sm" [routerLink]="['/shoes', shoe.Id, 'edit']">Edit</a>
+                @if (!shoe.RetireDate) {
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-danger-outline"
+                    [disabled]="retiringId === shoe.Id"
+                    (click)="retire(shoe)"
+                  >
+                    {{ retiringId === shoe.Id ? 'Retiring…' : 'Retire' }}
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

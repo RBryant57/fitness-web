@@ -1,0 +1,55 @@
+<div class="page">
+  <p class="page-eyebrow">Routes</p>
+  <div class="page-header">
+    <h1>Routes</h1>
+    <div class="page-actions">
+      <a class="btn" routerLink="/routes/types">Manage Route Types</a>
+      <a class="btn btn-primary" routerLink="/routes/new">+ Add Route</a>
+    </div>
+  </div>
+  <p class="page-subtitle">The course library used across rides, runs and walks.</p>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <div class="table-wrap">
+    @if (loading) {
+      <div class="loading-row"><span class="spinner"></span> Loading routes…</div>
+    } @else if (routes.length === 0) {
+      <div class="empty-state">
+        <div class="empty-title">No routes yet</div>
+        <p>Add your first route to start logging structured sessions.</p>
+        <a class="btn btn-primary" routerLink="/routes/new">+ Add Route</a>
+      </div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Type</th>
+            <th class="num">Rating</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (route of routes; track route.Id) {
+            <tr>
+              <td>{{ route.Name }}</td>
+              <td>{{ route.City || '—' }}</td>
+              <td>{{ route.State || '—' }}</td>
+              <td>{{ typesById.get(route.TypeId)?.Name || route.TypeId }}</td>
+              <td class="num">{{ route.Rating }}</td>
+              <td class="wrap">{{ route.Notes || '—' }}</td>
+              <td><a class="btn btn-sm" [routerLink]="['/routes', route.Id, 'edit']">Edit</a></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

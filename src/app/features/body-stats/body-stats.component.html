@@ -1,0 +1,69 @@
+<div class="page">
+  <p class="page-eyebrow">Body</p>
+  <div class="page-header">
+    <h1>Body Stats</h1>
+    <div class="page-actions">
+      <a class="btn" routerLink="/weights">Weight Log</a>
+    </div>
+  </div>
+  <p class="page-subtitle">Gym time and weight trend over a date range.</p>
+  <app-route-divider></app-route-divider>
+
+  <form class="toolbar" [formGroup]="filterForm" (ngSubmit)="load()">
+    <div class="field">
+      <label for="startDate">From</label>
+      <input id="startDate" type="date" formControlName="startDate" />
+    </div>
+    <div class="field">
+      <label for="endDate">To</label>
+      <input id="endDate" type="date" formControlName="endDate" />
+    </div>
+    <button type="submit" class="btn btn-primary">Apply</button>
+  </form>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Average gym hours</div>
+      <div class="stat-value">{{ averageGymHours !== null ? averageGymHours.toFixed(1) : '—' }}<span class="unit">hrs</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total gym hours</div>
+      <div class="stat-value">{{ totalGymHours !== null ? totalGymHours.toFixed(1) : '—' }}<span class="unit">hrs</span></div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    @if (loading) {
+      <div class="loading-row"><span class="spinner"></span> Loading weight readings…</div>
+    } @else if (weightReadings.length === 0) {
+      <div class="empty-state">
+        <div class="empty-title">No weight readings in this range</div>
+      </div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th class="num">Weight</th>
+            <th class="num">Body fat %</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (w of weightReadings; track w.Id) {
+            <tr>
+              <td>{{ w.Date | date: 'MMM d, y' }}</td>
+              <td class="num">{{ w.Quantity }} lb</td>
+              <td class="num">{{ w.BodyFatPercentage }}%</td>
+              <td class="wrap">{{ w.Notes || '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

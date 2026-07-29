@@ -1,0 +1,72 @@
+<div class="page">
+  <p class="page-eyebrow">Equipment</p>
+  <div class="page-header">
+    <h1>{{ isEdit ? 'Edit Bike' : 'Add a Bike' }}</h1>
+    <div class="page-actions">
+      <a class="btn" routerLink="/bikes">Cancel</a>
+    </div>
+  </div>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  @if (loading) {
+    <div class="loading-row"><span class="spinner"></span> Loading…</div>
+  } @else {
+    @if (isEdit && maxOdometer !== null) {
+      <div class="stat-grid" style="max-width: 300px;">
+        <div class="stat-card">
+          <div class="stat-label">Max odometer on record</div>
+          <div class="stat-value">{{ maxOdometer }}</div>
+        </div>
+      </div>
+    }
+
+    <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <div class="field field-full">
+          <label for="name">Name</label>
+          <input id="name" type="text" formControlName="Name" />
+        </div>
+
+        <div class="field">
+          <label for="manufacturerId">Manufacturer</label>
+          <select id="manufacturerId" formControlName="ManufacturerId">
+            <option [ngValue]="null">Select a manufacturer…</option>
+            @for (m of manufacturers; track m.Id) {
+              <option [ngValue]="m.Id">{{ m.Name }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label for="typeId">Type ID</label>
+          <input id="typeId" type="number" formControlName="TypeId" />
+          <span class="hint">The API doesn't expose a bike-type lookup endpoint — enter the numeric type id directly.</span>
+        </div>
+
+        <div class="field">
+          <label for="acquisitionDate">Acquisition date</label>
+          <input id="acquisitionDate" type="date" formControlName="AcquisitionDate" />
+        </div>
+        <div class="field">
+          <label for="baseMiles">Base miles</label>
+          <input id="baseMiles" type="number" formControlName="BaseMiles" />
+        </div>
+
+        <div class="field field-full">
+          <label for="notes">Notes</label>
+          <textarea id="notes" formControlName="Notes"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="submitting">
+          {{ submitting ? 'Saving…' : 'Save bike' }}
+        </button>
+        <a class="btn" routerLink="/bikes">Cancel</a>
+      </div>
+    </form>
+  }
+</div>

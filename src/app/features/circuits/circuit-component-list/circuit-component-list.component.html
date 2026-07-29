@@ -1,0 +1,46 @@
+<div class="page">
+  <p class="page-eyebrow">Strength</p>
+  <div class="page-header">
+    <h1>Circuit Components</h1>
+    <div class="page-actions">
+      <a class="btn" routerLink="/circuits">Back to Circuits</a>
+      <a class="btn btn-primary" routerLink="/circuits/components/new">+ Add Component</a>
+    </div>
+  </div>
+  <p class="page-subtitle">Individual exercises that make up a circuit.</p>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <div class="table-wrap">
+    @if (loading) {
+      <div class="loading-row"><span class="spinner"></span> Loading components…</div>
+    } @else if (components.length === 0) {
+      <div class="empty-state">
+        <div class="empty-title">No circuit components yet</div>
+        <a class="btn btn-primary" routerLink="/circuits/components/new">+ Add Component</a>
+      </div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Exercise</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of components; track c.Id) {
+            <tr>
+              <td>{{ c.ExerciseName }}</td>
+              <td class="wrap">{{ c.Notes || '—' }}</td>
+              <td><a class="btn btn-sm" [routerLink]="['/circuits/components', c.Id, 'edit']">Edit</a></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

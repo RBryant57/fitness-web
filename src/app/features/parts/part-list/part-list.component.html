@@ -1,0 +1,51 @@
+<div class="page">
+  <p class="page-eyebrow">Equipment</p>
+  <div class="page-header">
+    <h1>Parts</h1>
+    <div class="page-actions">
+      <a class="btn" routerLink="/parts/types">Manage Part Types</a>
+      <a class="btn btn-primary" routerLink="/parts/new">+ Add Part</a>
+    </div>
+  </div>
+  <p class="page-subtitle">Component inventory used in bike maintenance history.</p>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <div class="table-wrap">
+    @if (loading) {
+      <div class="loading-row"><span class="spinner"></span> Loading parts…</div>
+    } @else if (parts.length === 0) {
+      <div class="empty-state">
+        <div class="empty-title">No parts yet</div>
+        <p>Add your first part to start tracking maintenance.</p>
+        <a class="btn btn-primary" routerLink="/parts/new">+ Add Part</a>
+      </div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Manufacturer</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (part of parts; track part.Id) {
+            <tr>
+              <td>{{ part.Name }}</td>
+              <td>{{ partTypesById.get(part.PartTypeId)?.Name || part.PartTypeId }}</td>
+              <td>{{ manufacturersById.get(part.ManufacturerId)?.Name || part.ManufacturerId }}</td>
+              <td class="wrap">{{ part.Notes || '—' }}</td>
+              <td><a class="btn btn-sm" [routerLink]="['/parts', part.Id, 'edit']">Edit</a></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

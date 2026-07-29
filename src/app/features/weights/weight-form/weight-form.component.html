@@ -1,0 +1,47 @@
+<div class="page">
+  <p class="page-eyebrow">Body</p>
+  <div class="page-header">
+    <h1>{{ isEdit ? 'Edit Reading' : 'Record Weight' }}</h1>
+    <div class="page-actions">
+      <a class="btn" routerLink="/weights">Cancel</a>
+    </div>
+  </div>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  @if (loading) {
+    <div class="loading-row"><span class="spinner"></span> Loading…</div>
+  } @else {
+    <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <div class="field">
+          <label for="date">Date</label>
+          <input id="date" type="date" formControlName="Date" />
+        </div>
+        <div class="field">
+          <label for="quantity">Weight (lb)</label>
+          <input id="quantity" type="number" step="0.1" formControlName="Quantity" />
+        </div>
+        <div class="field">
+          <label for="bodyFat">Body fat %</label>
+          <input id="bodyFat" type="number" step="0.1" formControlName="BodyFatPercentage" />
+        </div>
+
+        <div class="field field-full">
+          <label for="notes">Notes</label>
+          <textarea id="notes" formControlName="Notes"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="submitting">
+          {{ submitting ? 'Saving…' : 'Save reading' }}
+        </button>
+        <a class="btn" routerLink="/weights">Cancel</a>
+      </div>
+    </form>
+  }
+</div>

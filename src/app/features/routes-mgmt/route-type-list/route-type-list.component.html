@@ -1,0 +1,43 @@
+<div class="page">
+  <p class="page-eyebrow">Routes</p>
+  <div class="page-header">
+    <h1>Route Types</h1>
+    <div class="page-actions">
+      <a class="btn" routerLink="/routes">Back to Routes</a>
+      <a class="btn btn-primary" routerLink="/routes/types/new">+ Add Type</a>
+    </div>
+  </div>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <div class="table-wrap">
+    @if (loading) {
+      <div class="loading-row"><span class="spinner"></span> Loading route types…</div>
+    } @else if (routeTypes.length === 0) {
+      <div class="empty-state">
+        <div class="empty-title">No route types yet</div>
+        <a class="btn btn-primary" routerLink="/routes/types/new">+ Add Type</a>
+      </div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of routeTypes; track t.Id) {
+            <tr>
+              <td>{{ t.Name }}</td>
+              <td><a class="btn btn-sm" [routerLink]="['/routes/types', t.Id, 'edit']">Edit</a></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<div class="page">
+  <p class="page-eyebrow">Training Log</p>
+  <div class="page-header">
+    <h1>Training Runs</h1>
+    <div class="page-actions">
+      <a class="btn btn-primary" routerLink="/runs/training/new">+ Log Run</a>
+    </div>
+  </div>
+  <p class="page-subtitle">Structured runs against a known route, with GPX and crossing attempts.</p>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <div class="table-wrap">
+    @if (loading) {
+      <div class="loading-row"><span class="spinner"></span> Loading training runs…</div>
+    } @else if (runs.length === 0) {
+      <div class="empty-state">
+        <div class="empty-title">No training runs logged yet</div>
+        <p>Log your first run to see it here.</p>
+        <a class="btn btn-primary" routerLink="/runs/training/new">+ Log Run</a>
+      </div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Shoe</th>
+            <th>Route</th>
+            <th class="num">Distance</th>
+            <th class="num">Time</th>
+            <th class="num">Pace</th>
+            <th class="num">Avg HR</th>
+            <th class="num">Elev.</th>
+            <th>Weather</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (run of runs; track run.Id) {
+            <tr>
+              <td>{{ run.RunDate | date: 'MMM d, y' }}</td>
+              <td>{{ run.ShoeName || '—' }}</td>
+              <td>{{ run.RouteName || '—' }}</td>
+              <td class="num">{{ formatDecimal(run.Distance, 2) }} mi</td>
+              <td class="num">{{ formatHms(run.Hours, run.Minutes, run.Seconds) }}</td>
+              <td class="num">{{ formatDecimal(run.Pace, 2) }} /mi</td>
+              <td class="num">{{ run.AverageHr }}</td>
+              <td class="num">{{ run.ElevationGain }} ft</td>
+              <td>{{ run.Temperature }}°{{ run.Precipitation ? ' · rain' : '' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

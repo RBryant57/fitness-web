@@ -1,0 +1,58 @@
+<div class="page">
+  <p class="page-eyebrow">Equipment</p>
+  <div class="page-header">
+    <h1>{{ isEdit ? 'Edit Part' : 'Add a Part' }}</h1>
+    <div class="page-actions">
+      <a class="btn" routerLink="/parts">Cancel</a>
+    </div>
+  </div>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  @if (loading) {
+    <div class="loading-row"><span class="spinner"></span> Loading…</div>
+  } @else {
+    <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <div class="field field-full">
+          <label for="name">Name</label>
+          <input id="name" type="text" formControlName="Name" />
+        </div>
+
+        <div class="field">
+          <label for="partTypeId">Part type</label>
+          <select id="partTypeId" formControlName="PartTypeId">
+            <option [ngValue]="null">Select a type…</option>
+            @for (t of partTypes; track t.Id) {
+              <option [ngValue]="t.Id">{{ t.Name }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label for="manufacturerId">Manufacturer</label>
+          <select id="manufacturerId" formControlName="ManufacturerId">
+            <option [ngValue]="null">Select a manufacturer…</option>
+            @for (m of manufacturers; track m.Id) {
+              <option [ngValue]="m.Id">{{ m.Name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field field-full">
+          <label for="notes">Notes</label>
+          <textarea id="notes" formControlName="Notes"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="submitting">
+          {{ submitting ? 'Saving…' : 'Save part' }}
+        </button>
+        <a class="btn" routerLink="/parts">Cancel</a>
+      </div>
+    </form>
+  }
+</div>

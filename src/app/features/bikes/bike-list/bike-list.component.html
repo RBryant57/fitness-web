@@ -1,0 +1,54 @@
+<div class="page">
+  <p class="page-eyebrow">Equipment</p>
+  <div class="page-header">
+    <h1>Bikes</h1>
+    <div class="page-actions">
+      <a class="btn btn-primary" routerLink="/bikes/new">+ Add Bike</a>
+    </div>
+  </div>
+  <p class="page-subtitle">The fleet — used across rides, non-ride miles and part tracking.</p>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <div class="table-wrap">
+    @if (loading) {
+      <div class="loading-row"><span class="spinner"></span> Loading bikes…</div>
+    } @else if (bikes.length === 0) {
+      <div class="empty-state">
+        <div class="empty-title">No bikes yet</div>
+        <p>Add your first bike to start logging rides.</p>
+        <a class="btn btn-primary" routerLink="/bikes/new">+ Add Bike</a>
+      </div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th class="num">Type ID</th>
+            <th>Acquired</th>
+            <th class="num">Age (days)</th>
+            <th class="num">Base miles</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (bike of bikes; track bike.Id) {
+            <tr>
+              <td>{{ bike.Name }}</td>
+              <td class="num">{{ bike.TypeId }}</td>
+              <td>{{ bike.AcquisitionDate | date: 'MMM d, y' }}</td>
+              <td class="num">{{ bike.Age }}</td>
+              <td class="num">{{ bike.BaseMiles }}</td>
+              <td class="wrap">{{ bike.Notes || '—' }}</td>
+              <td><a class="btn btn-sm" [routerLink]="['/bikes', bike.Id, 'edit']">Edit</a></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

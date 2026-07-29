@@ -1,0 +1,56 @@
+<div class="page">
+  <p class="page-eyebrow">Training Log</p>
+  <div class="page-header">
+    <h1>Recreational Walks</h1>
+    <div class="page-actions">
+      <a class="btn btn-primary" routerLink="/walks/recreational/new">+ Log Walk</a>
+    </div>
+  </div>
+  <p class="page-subtitle">Free-form walks not tied to a structured training route.</p>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <div class="table-wrap">
+    @if (loading) {
+      <div class="loading-row"><span class="spinner"></span> Loading recreational walks…</div>
+    } @else if (walks.length === 0) {
+      <div class="empty-state">
+        <div class="empty-title">No recreational walks logged yet</div>
+        <p>Log your first walk to see it here.</p>
+        <a class="btn btn-primary" routerLink="/walks/recreational/new">+ Log Walk</a>
+      </div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Shoe</th>
+            <th>Route</th>
+            <th class="num">Distance</th>
+            <th class="num">Time</th>
+            <th class="num">Pace</th>
+            <th class="num">Avg HR</th>
+            <th>Weather</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (walk of walks; track walk.Id) {
+            <tr>
+              <td>{{ walk.WalkDate | date: 'MMM d, y' }}</td>
+              <td>{{ walk.ShoeName || '—' }}</td>
+              <td>{{ walk.RouteName || '—' }}</td>
+              <td class="num">{{ formatDecimal(walk.Distance, 2) }} mi</td>
+              <td class="num">{{ formatHms(walk.Hours, walk.Minutes, walk.Seconds) }}</td>
+              <td class="num">{{ formatDecimal(walk.Pace, 2) }} /mi</td>
+              <td class="num">{{ walk.AverageHr }}</td>
+              <td>{{ walk.Temperature }}°{{ walk.Precipitation ? ' · rain' : '' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<div class="page">
+  <p class="page-eyebrow">Strength</p>
+  <div class="page-header">
+    <h1>{{ isEdit ? 'Edit Component' : 'Add a Component' }}</h1>
+    <div class="page-actions">
+      <a class="btn" routerLink="/circuits/components">Cancel</a>
+    </div>
+  </div>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  @if (loading) {
+    <div class="loading-row"><span class="spinner"></span> Loading…</div>
+  } @else {
+    <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <div class="field field-full">
+          <label for="exerciseName">Exercise name</label>
+          <input id="exerciseName" type="text" formControlName="ExerciseName" />
+        </div>
+        <div class="field field-full">
+          <label for="notes">Notes</label>
+          <textarea id="notes" formControlName="Notes"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="submitting">
+          {{ submitting ? 'Saving…' : 'Save component' }}
+        </button>
+        <a class="btn" routerLink="/circuits/components">Cancel</a>
+      </div>
+    </form>
+  }
+</div>

@@ -1,0 +1,75 @@
+<div class="page">
+  <p class="page-eyebrow">Analytics</p>
+  <div class="page-header">
+    <h1>Weather</h1>
+  </div>
+  <p class="page-subtitle">Conditions across every logged session in the selected range.</p>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <form class="toolbar" [formGroup]="filterForm" (ngSubmit)="load()">
+    <div class="field">
+      <label for="startDate">From</label>
+      <input id="startDate" type="date" formControlName="startDate" />
+    </div>
+    <div class="field">
+      <label for="endDate">To</label>
+      <input id="endDate" type="date" formControlName="endDate" />
+    </div>
+    <div class="field">
+      <label for="typeId">Workout type</label>
+      <select id="typeId" formControlName="typeId">
+        <option [ngValue]="null">All types</option>
+        @for (t of workoutTypes; track t.id) {
+          <option [ngValue]="t.id">{{ t.label }}</option>
+        }
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Apply</button>
+  </form>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Average temperature</div>
+      <div class="stat-value">{{ averageTemperature !== null ? averageTemperature.toFixed(1) : '—' }}<span class="unit">°F</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Average wind speed</div>
+      <div class="stat-value">{{ averageWindSpeed !== null ? averageWindSpeed.toFixed(1) : '—' }}<span class="unit">mph</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Rain days</div>
+      <div class="stat-value">{{ rainDays !== null ? rainDays : '—' }}<span class="unit">days</span></div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    @if (loading) {
+      <div class="loading-row"><span class="spinner"></span> Loading wind distribution…</div>
+    } @else if (windDistribution.length === 0) {
+      <div class="empty-state">
+        <div class="empty-title">No wind data in this range</div>
+      </div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Direction</th>
+            <th class="num">Frequency (days)</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (w of windDistribution; track w.Direction) {
+            <tr>
+              <td>{{ w.Direction }}</td>
+              <td class="num">{{ w.Frequency }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

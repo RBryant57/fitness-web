@@ -1,0 +1,90 @@
+<div class="page">
+  <p class="page-eyebrow">Training Log</p>
+  <div class="page-header">
+    <h1>Log a Stationary Ride</h1>
+    <div class="page-actions">
+      <a class="btn" routerLink="/rides/stationary">Cancel</a>
+    </div>
+  </div>
+  <p class="page-subtitle">Indoor trainer session.</p>
+  <app-route-divider></app-route-divider>
+
+  @if (error) {
+    <div class="error-banner">{{ error }}</div>
+  }
+
+  <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-grid">
+      <div class="field">
+        <label for="exerciseDate">Date</label>
+        <input id="exerciseDate" type="date" formControlName="ExerciseDate" />
+      </div>
+      <div class="field">
+        <label for="equipmentId">Bike</label>
+        <select id="equipmentId" formControlName="EquipmentId">
+          <option [ngValue]="null">Select a bike…</option>
+          @for (bike of bikes; track bike.Id) {
+            <option [ngValue]="bike.Id">{{ bike.Name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="startTime">Start time</label>
+        <input id="startTime" type="datetime-local" formControlName="StartTime" />
+      </div>
+      <div class="field">
+        <label for="endTime">End time</label>
+        <input id="endTime" type="datetime-local" formControlName="EndTime" />
+      </div>
+
+      <div class="field">
+        <label for="startOdometer">Start odometer</label>
+        <input id="startOdometer" type="number" formControlName="StartOdometer" />
+      </div>
+      <div class="field">
+        <label for="endOdometer">End odometer</label>
+        <input id="endOdometer" type="number" formControlName="EndOdometer" />
+      </div>
+
+      <div class="field">
+        <label>Ride time</label>
+        <div style="display:flex; gap:8px;">
+          <input type="number" min="0" formControlName="RideTimeHours" placeholder="H" />
+          <input type="number" min="0" max="59" formControlName="RideTimeMinutes" placeholder="M" />
+          <input type="number" min="0" max="59" formControlName="RideTimeSeconds" placeholder="S" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="quantity">Distance (mi)</label>
+        <input id="quantity" type="number" step="0.01" formControlName="Quantity" />
+      </div>
+
+      <div class="form-section-title">Effort</div>
+      <div class="field">
+        <label for="averageHr">Average HR</label>
+        <input id="averageHr" type="number" formControlName="AverageHr" />
+      </div>
+      <div class="field">
+        <label for="maxHr">Max HR</label>
+        <input id="maxHr" type="number" formControlName="MaxHr" />
+      </div>
+      <div class="field">
+        <label for="averageCadence">Average cadence</label>
+        <input id="averageCadence" type="number" formControlName="AverageCadence" />
+      </div>
+
+      <div class="field field-full">
+        <label for="notes">Notes</label>
+        <textarea id="notes" formControlName="Notes"></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="submitting">
+        {{ submitting ? 'Saving…' : 'Save ride' }}
+      </button>
+      <a class="btn" routerLink="/rides/stationary">Cancel</a>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,43 @@
+<div class="page">
+  <p class="page-eyebrow">Fitness Log</p>
+  <div class="page-header">
+    <h1>Dashboard</h1>
+  </div>
+  <p class="page-subtitle">A training computer for every ride, run, walk and lift you log.</p>
+  <app-route-divider></app-route-divider>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Training rides — 30d</div>
+      <div class="stat-value">{{ loading ? '—' : recentRideCount }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Training runs — 30d</div>
+      <div class="stat-value">{{ loading ? '—' : recentRunCount }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Training walks — 30d</div>
+      <div class="stat-value">{{ loading ? '—' : recentWalkCount }}</div>
+    </div>
+  </div>
+
+  <h2 class="section-heading">Quick log</h2>
+  <div class="tile-grid">
+    @for (tile of quickLinks; track tile.path) {
+      <a class="tile" [routerLink]="tile.path">
+        <span class="tile-label">{{ tile.label }}</span>
+        <span class="tile-hint">{{ tile.hint }}</span>
+      </a>
+    }
+  </div>
+
+  <h2 class="section-heading">Browse</h2>
+  <div class="tile-grid">
+    @for (tile of sections; track tile.path) {
+      <a class="tile" [routerLink]="tile.path">
+        <span class="tile-label">{{ tile.label }}</span>
+        <span class="tile-hint">{{ tile.hint }}</span>
+      </a>
+    }
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<aside class="sidebar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+      <circle cx="16" cy="16" r="13" />
+      <path d="M6 18 L12 12 L16 16 L26 8" />
+    </svg>
+    <div class="brand-text">
+      <span class="brand-name">Fitness Log</span>
+      <span class="brand-sub">training computer</span>
+    </div>
+  </div>
+
+  <nav class="nav-scroll">
+    @for (group of groups; track group.title) {
+      <div class="nav-group">
+        <div class="nav-group-title">{{ group.title }}</div>
+        @for (link of group.links; track link.path) {
+          <a class="nav-link" [routerLink]="link.path" routerLinkActive="active">{{ link.label }}</a>
+        }
+      </div>
+    }
+  </nav>
+</aside>
