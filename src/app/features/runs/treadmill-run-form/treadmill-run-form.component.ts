@@ -7,6 +7,7 @@ import { RunsService } from '../../../core/services/runs.service';
 import { ShoesService } from '../../../core/services/shoes.service';
 import { Shoe } from '../../../core/models/equipment.model';
 import { RouteDividerComponent } from '../../../shared/components/route-divider/route-divider.component';
+import { nowDatetimeLocal } from '../../../shared/utils/format.util';
 
 @Component({
   selector: 'app-treadmill-run-form',
@@ -26,8 +27,11 @@ export class TreadmillRunFormComponent implements OnInit {
 
   form = this.fb.nonNullable.group({
     ExerciseDate: ['', Validators.required],
-    StartTime: ['', Validators.required],
-    EndTime: ['', Validators.required],
+    // Defaulted to "now" (with seconds) so the field is never left blank —
+    // native datetime-local inputs report an empty value until every
+    // segment, including AM/PM, has been filled in by the user.
+    StartTime: [nowDatetimeLocal(), Validators.required],
+    EndTime: [nowDatetimeLocal(), Validators.required],
     EquipmentId: [null as number | null, Validators.required],
     RunTimeHours: [0],
     RunTimeMinutes: [0],
@@ -46,6 +50,7 @@ export class TreadmillRunFormComponent implements OnInit {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.error = 'Please fill in all required fields (highlighted below) before saving.';
       return;
     }
 

@@ -17,35 +17,55 @@
     <div class="form-grid">
       <div class="field">
         <label for="exerciseDate">Date</label>
-        <input id="exerciseDate" type="date" formControlName="ExerciseDate" />
+        <input id="exerciseDate" type="date" formControlName="ExerciseDate"
+               [class.invalid]="form.get('ExerciseDate')!.invalid && form.get('ExerciseDate')!.touched" />
+        @if (form.get('ExerciseDate')!.invalid && form.get('ExerciseDate')!.touched) {
+          <span class="field-error">Date is required.</span>
+        }
       </div>
       <div class="field">
         <label for="equipmentId">Bike</label>
-        <select id="equipmentId" formControlName="EquipmentId">
+        <select id="equipmentId" formControlName="EquipmentId"
+                [class.invalid]="form.get('EquipmentId')!.invalid && form.get('EquipmentId')!.touched">
           <option [ngValue]="null">Select a bike…</option>
           @for (bike of bikes; track bike.Id) {
             <option [ngValue]="bike.Id">{{ bike.Name }}</option>
           }
         </select>
+        @if (form.get('EquipmentId')!.invalid && form.get('EquipmentId')!.touched) {
+          <span class="field-error">Select a bike.</span>
+        }
       </div>
 
       <div class="field">
         <label for="startTime">Start time</label>
-        <input id="startTime" type="datetime-local" formControlName="StartTime" />
+        <input id="startTime" type="datetime-local" step="1" formControlName="StartTime"
+               [class.invalid]="form.get('StartTime')!.invalid && form.get('StartTime')!.touched" />
+        @if (form.get('StartTime')!.invalid && form.get('StartTime')!.touched) {
+          <span class="field-error">Start time is required.</span>
+        }
       </div>
       <div class="field">
         <label for="endTime">End time</label>
-        <input id="endTime" type="datetime-local" formControlName="EndTime" />
+        <input id="endTime" type="datetime-local" step="1" formControlName="EndTime"
+               [class.invalid]="form.get('EndTime')!.invalid && form.get('EndTime')!.touched" />
+        @if (form.get('EndTime')!.invalid && form.get('EndTime')!.touched) {
+          <span class="field-error">End time is required.</span>
+        }
       </div>
 
       <div class="field">
         <label for="routeId">Route</label>
-        <select id="routeId" formControlName="RouteId">
+        <select id="routeId" formControlName="RouteId"
+                [class.invalid]="form.get('RouteId')!.invalid && form.get('RouteId')!.touched">
           <option [ngValue]="null">Select a route…</option>
           @for (route of routes; track route.Id) {
             <option [ngValue]="route.Id">{{ route.Name }}</option>
           }
         </select>
+        @if (form.get('RouteId')!.invalid && form.get('RouteId')!.touched) {
+          <span class="field-error">Select a route.</span>
+        }
       </div>
       <div class="field">
         <label for="quantity">Distance (mi)</label>
@@ -55,11 +75,20 @@
       <div class="form-section-title">Odometer &amp; time</div>
       <div class="field">
         <label for="startOdometer">Start odometer</label>
-        <input id="startOdometer" type="number" formControlName="StartOdometer" />
+        <input id="startOdometer" type="number" formControlName="StartOdometer"
+               [class.invalid]="form.get('StartOdometer')!.invalid && form.get('StartOdometer')!.touched" />
+        @if (form.get('StartOdometer')!.invalid && form.get('StartOdometer')!.touched) {
+          <span class="field-error">Start odometer is required.</span>
+        }
+        <span class="hint">Auto-filled from the selected bike's last odometer reading — adjust if needed.</span>
       </div>
       <div class="field">
         <label for="endOdometer">End odometer</label>
-        <input id="endOdometer" type="number" formControlName="EndOdometer" />
+        <input id="endOdometer" type="number" formControlName="EndOdometer"
+               [class.invalid]="form.get('EndOdometer')!.invalid && form.get('EndOdometer')!.touched" />
+        @if (form.get('EndOdometer')!.invalid && form.get('EndOdometer')!.touched) {
+          <span class="field-error">End odometer is required.</span>
+        }
       </div>
       <div class="field">
         <label>Ride time</label>

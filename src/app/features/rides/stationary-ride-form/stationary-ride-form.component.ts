@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { catchError, filter, of, switchMap } from 'rxjs';
 
 import { RidesService } from '../../../core/services/rides.service';
 import { BikesService } from '../../../core/services/bikes.service';
 import { Bike } from '../../../core/models/equipment.model';
 import { RouteDividerComponent } from '../../../shared/components/route-divider/route-divider.component';
+import { nowDatetimeLocal } from '../../../shared/utils/format.util';
 
 @Component({
   selector: 'app-stationary-ride-form',
@@ -26,8 +28,11 @@ export class StationaryRideFormComponent implements OnInit {
 
   form = this.fb.nonNullable.group({
     ExerciseDate: ['', Validators.required],
-    StartTime: ['', Validators.required],
-    EndTime: ['', Validators.required],
+    // Defaulted to "now" (with seconds) so the field is never left blank —
+    // native datetime-local inputs report an empty value until every
+    // segment, including AM/PM, has been filled in by the user.
+    StartTime: [nowDatetimeLocal(), Validators.required],
+    EndTime: [nowDatetimeLocal(), Validators.required],
     EquipmentId: [null as number | null, Validators.required],
     StartOdometer: [0, Validators.required],
     EndOdometer: [0, Validators.required],
@@ -43,11 +48,28 @@ export class StationaryRideFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.bikesService.getAll().subscribe(bikes => (this.bikes = bikes));
+
+    // When a bike is selected, look up its current odometer reading and
+    // use it to pre-fill the start odometer for this ride. A stationary
+    // ride doesn't move the bike's real-world odometer, but this still
+    // gives a sensible, correctly-ordered starting value.
+    this.form
+      .get('EquipmentId')!
+      .valueChanges.pipe(
+        filter((id): id is number => id !== null),
+        switchMap(id => this.bikesService.getMaxOdometer(id).pipe(catchError(() => of(null))))
+      )
+      .subscribe(max => {
+        if (max !== null) {
+          this.form.patchValue({ StartOdometer: max });
+        }
+      });
   }
 
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.error = 'Please fill in all required fields (highlighted below) before saving.';
       return;
     }
 

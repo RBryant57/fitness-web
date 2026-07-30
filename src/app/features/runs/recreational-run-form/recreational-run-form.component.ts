@@ -10,6 +10,7 @@ import { Shoe } from '../../../core/models/equipment.model';
 import { Route } from '../../../core/models/route.model';
 import { RouteDividerComponent } from '../../../shared/components/route-divider/route-divider.component';
 import { GpxUploadComponent } from '../../../shared/components/gpx-upload/gpx-upload.component';
+import { nowDatetimeLocal } from '../../../shared/utils/format.util';
 
 @Component({
   selector: 'app-recreational-run-form',
@@ -32,8 +33,11 @@ export class RecreationalRunFormComponent implements OnInit {
 
   form = this.fb.nonNullable.group({
     ExerciseDate: ['', Validators.required],
-    StartTime: ['', Validators.required],
-    EndTime: ['', Validators.required],
+    // Defaulted to "now" (with seconds) so the field is never left blank —
+    // native datetime-local inputs report an empty value until every
+    // segment, including AM/PM, has been filled in by the user.
+    StartTime: [nowDatetimeLocal(), Validators.required],
+    EndTime: [nowDatetimeLocal(), Validators.required],
     PathEndTime: [''],
     EquipmentId: [null as number | null, Validators.required],
     RouteId: [null as number | null, Validators.required],
@@ -66,6 +70,7 @@ export class RecreationalRunFormComponent implements OnInit {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.error = 'Please fill in all required fields (highlighted below) before saving.';
       return;
     }
 

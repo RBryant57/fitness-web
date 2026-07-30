@@ -14,7 +14,7 @@ export function formatDecimal(value: number | null | undefined, digits = 2): str
   return value.toFixed(digits);
 }
 
-/** Converts an ISO datetime string to a `datetime-local` input value. */
+/** Converts an ISO datetime string to a `datetime-local` input value, including seconds. */
 export function toDatetimeLocal(value: string | null | undefined): string {
   if (!value) {
     return '';
@@ -24,7 +24,16 @@ export function toDatetimeLocal(value: string | null | undefined): string {
     return '';
   }
   const pad = (n: number) => n.toString().padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+/**
+ * Returns the current local date/time formatted for a `datetime-local` input
+ * (including seconds), suitable for defaulting a required start/end time field
+ * so it never loads blank.
+ */
+export function nowDatetimeLocal(): string {
+  return toDatetimeLocal(new Date().toISOString());
 }
 
 /** Converts an ISO datetime string to a `date` input value (yyyy-MM-dd). */

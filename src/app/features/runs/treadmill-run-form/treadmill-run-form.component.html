@@ -17,25 +17,41 @@
     <div class="form-grid">
       <div class="field">
         <label for="exerciseDate">Date</label>
-        <input id="exerciseDate" type="date" formControlName="ExerciseDate" />
+        <input id="exerciseDate" type="date" formControlName="ExerciseDate"
+               [class.invalid]="form.get('ExerciseDate')!.invalid && form.get('ExerciseDate')!.touched" />
+        @if (form.get('ExerciseDate')!.invalid && form.get('ExerciseDate')!.touched) {
+          <span class="field-error">Date is required.</span>
+        }
       </div>
       <div class="field">
         <label for="equipmentId">Shoe</label>
-        <select id="equipmentId" formControlName="EquipmentId">
+        <select id="equipmentId" formControlName="EquipmentId"
+                [class.invalid]="form.get('EquipmentId')!.invalid && form.get('EquipmentId')!.touched">
           <option [ngValue]="null">Select a shoe…</option>
           @for (shoe of shoes; track shoe.Id) {
             <option [ngValue]="shoe.Id">{{ shoe.Name }}</option>
           }
         </select>
+        @if (form.get('EquipmentId')!.invalid && form.get('EquipmentId')!.touched) {
+          <span class="field-error">Select a shoe.</span>
+        }
       </div>
 
       <div class="field">
         <label for="startTime">Start time</label>
-        <input id="startTime" type="datetime-local" formControlName="StartTime" />
+        <input id="startTime" type="datetime-local" step="1" formControlName="StartTime"
+               [class.invalid]="form.get('StartTime')!.invalid && form.get('StartTime')!.touched" />
+        @if (form.get('StartTime')!.invalid && form.get('StartTime')!.touched) {
+          <span class="field-error">Start time is required.</span>
+        }
       </div>
       <div class="field">
         <label for="endTime">End time</label>
-        <input id="endTime" type="datetime-local" formControlName="EndTime" />
+        <input id="endTime" type="datetime-local" step="1" formControlName="EndTime"
+               [class.invalid]="form.get('EndTime')!.invalid && form.get('EndTime')!.touched" />
+        @if (form.get('EndTime')!.invalid && form.get('EndTime')!.touched) {
+          <span class="field-error">End time is required.</span>
+        }
       </div>
 
       <div class="field">
