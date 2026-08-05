@@ -10,7 +10,8 @@ import { Shoe } from '../../../core/models/equipment.model';
 import { Route } from '../../../core/models/route.model';
 import { RouteDividerComponent } from '../../../shared/components/route-divider/route-divider.component';
 import { GpxUploadComponent } from '../../../shared/components/gpx-upload/gpx-upload.component';
-import { nowDatetimeLocal } from '../../../shared/utils/format.util';
+import { nowDatetimeLocal, roundTo, toDateInput, toDatetimeLocal } from '../../../shared/utils/format.util';
+import { GpxSummary, secondsToHms } from '../../../shared/utils/gpx-parser.util';
 
 @Component({
   selector: 'app-recreational-walk-form',
@@ -65,6 +66,51 @@ export class RecreationalWalkFormComponent implements OnInit {
 
   onGpxLoaded(gpx: string | null): void {
     this.gpx = gpx;
+  }
+
+  /** Pre-fills form fields from a parsed GPX file. Only touches fields the
+   *  track actually has data for — shoe, route, weather, and notes still
+   *  need to be entered by hand. */
+  onGpxSummary(summary: GpxSummary | null): void {
+    if (!summary) {
+      return;
+    }
+
+    if (summary.startTime) {
+      this.form.patchValue({
+        ExerciseDate: toDateInput(summary.startTime.toISOString()),
+        StartTime: toDatetimeLocal(summary.startTime.toISOString())
+      });
+    }
+    if (summary.endTime) {
+      this.form.patchValue({ EndTime: toDatetimeLocal(summary.endTime.toISOString()) });
+    }
+    if (summary.distanceMiles !== null) {
+      this.form.patchValue({ Quantity: roundTo(summary.distanceMiles, 2) });
+    }
+    if (summary.maxSpeedMph !== null) {
+      this.form.patchValue({ MaxSpeed: roundTo(summary.maxSpeedMph, 1) });
+    }
+    if (summary.averageHr !== null) {
+      this.form.patchValue({ AverageHr: roundTo(summary.averageHr) });
+    }
+    if (summary.maxHr !== null) {
+      this.form.patchValue({ MaxHr: roundTo(summary.maxHr) });
+    }
+    if (summary.elevationGainFeet !== null) {
+      this.form.patchValue({ ElevationGain: roundTo(summary.elevationGainFeet) });
+    }
+    if (summary.temperatureF !== null) {
+      this.form.patchValue({ Temperature: roundTo(summary.temperatureF) });
+    }
+    if (summary.movingSeconds !== null) {
+      const { hours, minutes, seconds } = secondsToHms(summary.movingSeconds);
+      this.form.patchValue({ WalkTimeHours: hours, WalkTimeMinutes: minutes, WalkTimeSeconds: seconds });
+    }
+    if (summary.elapsedSeconds !== null) {
+      const { hours, minutes, seconds } = secondsToHms(summary.elapsedSeconds);
+      this.form.patchValue({ PathTimeHours: hours, PathTimeMinutes: minutes, PathTimeSeconds: seconds });
+    }
   }
 
   submit(): void {

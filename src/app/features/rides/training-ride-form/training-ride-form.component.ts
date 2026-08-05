@@ -11,7 +11,8 @@ import { Bike } from '../../../core/models/equipment.model';
 import { Route } from '../../../core/models/route.model';
 import { RouteDividerComponent } from '../../../shared/components/route-divider/route-divider.component';
 import { GpxUploadComponent } from '../../../shared/components/gpx-upload/gpx-upload.component';
-import { nowDatetimeLocal } from '../../../shared/utils/format.util';
+import { nowDatetimeLocal, roundTo, toDateInput, toDatetimeLocal } from '../../../shared/utils/format.util';
+import { GpxSummary, secondsToHms } from '../../../shared/utils/gpx-parser.util';
 
 const WIND_DIRECTIONS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
@@ -34,6 +35,10 @@ export class TrainingRideFormComponent implements OnInit {
   submitting = false;
   error: string | null = null;
   gpx: string | null = null;
+
+  /** Distance from the most recently uploaded GPX file, used to derive EndOdometer
+   *  once a start odometer reading is known (from either direction of entry order). */
+  private gpxDistanceMiles: number | null = null;
 
   form = this.fb.nonNullable.group({
     ExerciseDate: ['', Validators.required],
@@ -79,12 +84,73 @@ export class TrainingRideFormComponent implements OnInit {
       .subscribe(max => {
         if (max !== null) {
           this.form.patchValue({ StartOdometer: max });
+          this.applyEndOdometer();
         }
       });
   }
 
   onGpxLoaded(gpx: string | null): void {
     this.gpx = gpx;
+  }
+
+  /** Pre-fills form fields from a parsed GPX file. Only touches fields the
+   *  track actually has data for — equipment, route, weather, crossing
+   *  counts, and notes still need to be entered by hand. */
+  onGpxSummary(summary: GpxSummary | null): void {
+    if (!summary) {
+      this.gpxDistanceMiles = null;
+      return;
+    }
+
+    if (summary.startTime) {
+      this.form.patchValue({
+        ExerciseDate: toDateInput(summary.startTime.toISOString()),
+        StartTime: toDatetimeLocal(summary.startTime.toISOString())
+      });
+    }
+    if (summary.endTime) {
+      this.form.patchValue({ EndTime: toDatetimeLocal(summary.endTime.toISOString()) });
+    }
+    if (summary.distanceMiles !== null) {
+      this.form.patchValue({ Quantity: roundTo(summary.distanceMiles, 2) });
+    }
+    if (summary.maxSpeedMph !== null) {
+      this.form.patchValue({ MaxSpeed: roundTo(summary.maxSpeedMph, 1) });
+    }
+    if (summary.averageHr !== null) {
+      this.form.patchValue({ AverageHr: roundTo(summary.averageHr) });
+    }
+    if (summary.maxHr !== null) {
+      this.form.patchValue({ MaxHr: roundTo(summary.maxHr) });
+    }
+    if (summary.averageCadence !== null) {
+      this.form.patchValue({ AverageCadence: roundTo(summary.averageCadence) });
+    }
+    if (summary.elevationGainFeet !== null) {
+      this.form.patchValue({ ElevationGain: roundTo(summary.elevationGainFeet) });
+    }
+    if (summary.temperatureF !== null) {
+      this.form.patchValue({ Temperature: roundTo(summary.temperatureF) });
+    }
+    // This form has a single required ride-time field (no separate
+    // moving/elapsed split), so use the full elapsed duration of the track.
+    if (summary.elapsedSeconds !== null) {
+      const { hours, minutes, seconds } = secondsToHms(summary.elapsedSeconds);
+      this.form.patchValue({ RideTimeHours: hours, RideTimeMinutes: minutes, RideTimeSeconds: seconds });
+    }
+
+    this.gpxDistanceMiles = summary.distanceMiles;
+    this.applyEndOdometer();
+  }
+
+  /** Keeps EndOdometer in sync with StartOdometer + GPX distance, however
+   *  the bike selection and GPX upload happened to be ordered. */
+  private applyEndOdometer(): void {
+    if (this.gpxDistanceMiles === null) {
+      return;
+    }
+    const start = this.form.get('StartOdometer')!.value ?? 0;
+    this.form.patchValue({ EndOdometer: roundTo(start + this.gpxDistanceMiles, 2) });
   }
 
   submit(): void {

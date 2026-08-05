@@ -48,3 +48,9 @@ export function toDateInput(value: string | null | undefined): string {
   const pad = (n: number) => n.toString().padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
+
+/** Rounds a number to a fixed number of decimal places. */
+export function roundTo(value: number, decimals = 0): number {
+  const factor = 10 ** decimals;
+  return Math.round(value * factor) / factor;
+}

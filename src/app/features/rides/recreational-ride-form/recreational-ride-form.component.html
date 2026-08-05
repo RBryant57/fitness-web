@@ -149,7 +149,7 @@
         <textarea id="notes" formControlName="Notes"></textarea>
       </div>
       <div class="field field-full">
-        <app-gpx-upload (gpxLoaded)="onGpxLoaded($event)"></app-gpx-upload>
+        <app-gpx-upload (gpxLoaded)="onGpxLoaded($event)" (summaryLoaded)="onGpxSummary($event)"></app-gpx-upload>
       </div>
     </div>
 
