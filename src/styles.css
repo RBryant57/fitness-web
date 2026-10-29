@@ -5,6 +5,8 @@
    for anything measured (distance, pace, odometer, time).
    ============================================================ */
 :root {
+  color-scheme: dark;
+
   /* Surfaces */
   --bg: #0e1116;
   --surface: #171b22;
